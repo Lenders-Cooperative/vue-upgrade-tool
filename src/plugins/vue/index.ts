@@ -24,8 +24,10 @@ import { arrayWatchPlugin } from './array-watch';
 import { emitsNonSfcPlugin, emitsSfcPlugin } from './emits';
 import { transitionGroupRootElementPlugin } from './transition-group-root-element';
 import { transitionPropsPlugin } from './transition-props';
+import { convertFiltersToFunctionCalls } from './filters-replace';
+import { convertElementWithVForToTemplate } from './v-for';
 
-export const vue = (): Plugin[] => ([
+export const vue = (): Plugin[] => [
   vueSetPlugin,
   vueSetManualPlugin,
   vueDeletePlugin,
@@ -54,4 +56,6 @@ export const vue = (): Plugin[] => ([
   emitsNonSfcPlugin,
   transitionGroupRootElementPlugin,
   transitionPropsPlugin,
-]);
+  convertFiltersToFunctionCalls,
+  convertElementWithVForToTemplate,
+];
