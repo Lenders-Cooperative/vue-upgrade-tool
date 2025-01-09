@@ -20,3 +20,21 @@ it('should add template and move vfor to template tag', () => {
     "
   `);
 });
+it('ignores template if already has one ', () => {
+  const code = `
+<template>
+    <template v-for="item in items" :key="item.id">
+      {{ item }}
+    </template>
+</template>
+`;
+  expect(transform(code, 'file.vue', [convertElementWithVForToTemplate]).code).toMatchInlineSnapshot(`
+    "
+    <template>
+        <template v-for="item in items" :key="item.id">
+          {{ item }}
+        </template>
+    </template>
+    "
+  `);
+});

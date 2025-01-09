@@ -11,6 +11,17 @@ export const convertElementWithVForToTemplate: CodemodPlugin = {
       // Traverse the template AST to find any element with the v-for directive
       traverseTemplateAST(sfcAST, {
         enterNode(node, parent) {
+          if (node.type === 'VElement' && node.name === 'template') {
+            // Look for v-for in the template element's attributes
+            const hasVFor = node.startTag.attributes.some(
+              (attr) => attr.type === 'VAttribute' && attr.key.type === 'VDirectiveKey' && attr.key.name.name === 'for', // Check for `v-for`
+            );
+
+            if (hasVFor) {
+              // If it's already a template with v-for, skip transformation
+              return;
+            }
+          }
           // Check if it's an element with a start tag and attributes
           if (node.type === 'VElement' && node.startTag) {
             const { startTag } = node;
