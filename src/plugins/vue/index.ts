@@ -26,6 +26,8 @@ import { transitionGroupRootElementPlugin } from './transition-group-root-elemen
 import { transitionPropsPlugin } from './transition-props';
 import { convertFiltersToFunctionCalls } from './filters-replace';
 import { convertElementWithVForToTemplate } from './v-for';
+import { changeVuedraggableImportToVueDraggablePlus } from './vue-draggable';
+import { changeFilterAccessToMethod } from './filter-to-method';
 
 export const vue = (): Plugin[] => [
   vueSetPlugin,
@@ -58,4 +60,6 @@ export const vue = (): Plugin[] => [
   transitionPropsPlugin,
   convertFiltersToFunctionCalls,
   convertElementWithVForToTemplate,
+  changeVuedraggableImportToVueDraggablePlus,
+  changeFilterAccessToMethod,
 ];

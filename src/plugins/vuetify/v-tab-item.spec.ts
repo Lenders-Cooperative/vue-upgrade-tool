@@ -1,6 +1,6 @@
 import { it, expect } from 'vitest';
 import { transform } from 'vue-metamorph';
-import { changeVTabItemToVWindowItem } from './vuetify';
+import { changeVTabItemToVWindowItem } from './v-tab-item';
 
 it('should change v-tab-item', () => {
   const code = `
