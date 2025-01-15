@@ -28,6 +28,7 @@ import { convertFiltersToFunctionCalls } from './filters-replace';
 import { convertElementWithVForToTemplate } from './v-for';
 import { changeVuedraggableImportToVueDraggablePlus } from './vue-draggable';
 import { changeFilterAccessToMethod } from './filter-to-method';
+import { changeThisUidToDollarUid } from './this-uid';
 
 export const vue = (): Plugin[] => [
   vueSetPlugin,
@@ -62,4 +63,5 @@ export const vue = (): Plugin[] => [
   convertElementWithVForToTemplate,
   changeVuedraggableImportToVueDraggablePlus,
   changeFilterAccessToMethod,
+  changeThisUidToDollarUid,
 ];
