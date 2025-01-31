@@ -72,3 +72,31 @@ it('passes along args', () => {
     "
   `);
 });
+it('aceepts conditional values', () => {
+  const code = `
+<template>
+  <div>{{ myvalue ? 'tes' : 'test' | dateTime(false, true) | orDashes }}</div>
+</template>
+`;
+  expect(transform(code, 'file.vue', [convertFiltersToFunctionCalls]).code).toMatchInlineSnapshot(`
+    "
+    <template>
+  <div>{{ orDashes(dateTime(myvalue ? 'tes' : 'test', false, true)) }}</div>
+</template>
+    "
+  `);
+});
+it('aceepts function values', () => {
+  const code = `
+<template>
+  <div>{{ myFunc(myvalue) | dateTime(false, true) | orDashes }}</div>
+</template>
+`;
+  expect(transform(code, 'file.vue', [convertFiltersToFunctionCalls]).code).toMatchInlineSnapshot(`
+    "
+    <template>
+  <div>{{ orDashes(dateTime(myFunc(myvalue), false, true)) }}</div>
+</template>
+    "
+  `);
+});

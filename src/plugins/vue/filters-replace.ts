@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CodemodPlugin } from 'vue-metamorph';
 
 export const convertFiltersToFunctionCalls: CodemodPlugin = {
@@ -7,25 +8,38 @@ export const convertFiltersToFunctionCalls: CodemodPlugin = {
   transform({ sfcAST, utils: { traverseTemplateAST } }) {
     let transformCount = 0;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const getNestedValue = (val: any) => {
       if (!val.object.object) {
         return `${val.object.name}.${val.property.name}`;
       }
       return `${val.object.object.name}.${val.object.property.name}.${val.property.name}`;
     };
-
-    // Function to convert filter chain to function call
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const convertToFunctionCall = (filters: any[], expression: any) => {
-      // Base case: if no filters, return the expression itself
+    const getExpressionValue = (expression: any) => {
       let expressionValue = expression.name ?? '';
-      if (expression.raw) {
+      if (expression.type === 'ConditionalExpression') {
+        const testValue = getExpressionValue(expression.test);
+        const consequentValue = getExpressionValue(expression.consequent);
+        const altValue = getExpressionValue(expression.alternate);
+        expressionValue = `${testValue} ? ${consequentValue} : ${altValue}`;
+      } else if (expression.type === 'CallExpression') {
+        const args = expression.arguments.map((arg: any) => {
+          const value = getExpressionValue(arg);
+          return value;
+        });
+        expressionValue = `${expression.callee.name}(${args.join(', ')})`;
+      } else if (expression.raw) {
         expressionValue = expression.raw;
       } else if (!expression.name && !expression.raw && expression.object) {
         expressionValue = getNestedValue(expression);
       }
-      if (filters.length === 0) return expressionValue; // Assuming `name` holds the expression (like 'test')
+      return expressionValue;
+    };
+
+    // Function to convert filter chain to function call
+    const convertToFunctionCall = (filters: any[], expression: any) => {
+      // Base case: if no filters, return the expression itself
+      const expressionValue = getExpressionValue(expression);
+      if (filters.length === 0) return expressionValue;
 
       // Start with the last filter in the sequence
       const firstFilter = filters.shift();
