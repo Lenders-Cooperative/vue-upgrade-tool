@@ -6,7 +6,7 @@ export const updateVTextFieldPropsFormat: CodemodPlugin = {
 
   transform({ scriptASTs, sfcAST, utils: { traverseScriptAST, traverseTemplateAST, builders } }) {
     let transformCount = 0;
-
+    let hasVTextField: boolean;
     // Traverse the <script> ASTs and check if there are any relevant string literals in code (not needed for this case)
     for (const scriptAST of scriptASTs) {
       traverseScriptAST(scriptAST, {
@@ -23,6 +23,9 @@ export const updateVTextFieldPropsFormat: CodemodPlugin = {
       traverseTemplateAST(sfcAST, {
         enterNode(node) {
           if (node.type === 'VElement' && node.name === 'v-text-field') {
+            hasVTextField = true;
+            node.name = 'TextField';
+            node.rawName = 'TextField';
             for (let i = 0; i < node.startTag.attributes.length; i++) {
               const attr = node.startTag.attributes[i];
 
@@ -53,6 +56,58 @@ export const updateVTextFieldPropsFormat: CodemodPlugin = {
         },
       });
     }
+    scriptASTs.forEach((scriptAST) => {
+      traverseScriptAST(scriptAST, {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        visitImportDeclaration(node: any) {
+          // Look for the import declaration
+          if (
+            node.value.type === 'ImportDeclaration' &&
+            node.value.source.value === '@lenders-cooperative/los-app-ui-component-lib' &&
+            hasVTextField
+          ) {
+            // Check if TextArea is already in the import
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const hasTextArea = node.value.specifiers.some((specifier: any) => specifier.local.name === 'TextField');
+
+            // If TextArea is not already imported, add it
+            if (!hasTextArea) {
+              node.value.specifiers.push(builders.importSpecifier(builders.identifier('TextField')));
+            }
+
+            transformCount++; // Increment the count of transformations made
+          }
+          return false;
+        },
+        visitObjectExpression(node) {
+          // Look for the components object to add TextField
+          if (node.value.properties && hasVTextField) {
+            for (const prop of node.value.properties) {
+              if (prop.key.name === 'components') {
+                const componentsObj = prop.value;
+
+                // Check if TextField is already in components
+                const hasTextField = componentsObj.properties.some(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  (component: any) => component.key.name === 'TextField',
+                );
+
+                // If TextField is not already in the components object, add it
+                if (!hasTextField) {
+                  componentsObj.properties.push(
+                    builders.property('init', builders.identifier('TextField'), builders.identifier('TextField')),
+                  );
+                }
+                transformCount++; // Increment the count of transformations made
+
+                break;
+              }
+            }
+          }
+          return false;
+        },
+      });
+    });
 
     return transformCount; // Return the number of transformations made
   },

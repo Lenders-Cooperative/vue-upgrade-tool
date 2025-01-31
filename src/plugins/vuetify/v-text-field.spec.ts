@@ -15,8 +15,8 @@ it('should change outlined', () => {
     "
     <template>
       <div>
-      <v-text-field variant="outlined">
-      </v-text-field>
+      <TextField variant="outlined">
+      </TextField>
       </div>
     </template>
     "
@@ -31,15 +31,69 @@ it('should change dense', () => {
     </v-text-field>
     </div>
   </template>
+  script
   `;
   expect(transform(code, 'file.vue', [updateVTextFieldPropsFormat]).code).toMatchInlineSnapshot(`
     "
       <template>
         <div>
-        <v-text-field density="compact">
-        </v-text-field>
+        <TextField density="compact">
+        </TextField>
         </div>
       </template>
+      script
+      "
+  `);
+});
+it('should change v-text-field and add import', () => {
+  const code = `
+  <template>
+    <div>
+    <v-text-field dense>
+    </v-text-field>
+    </div>
+  </template>
+  <script>
+      import {Test} from '@lenders-cooperative/los-app-ui-component-lib'
+      </script>
+  `;
+  expect(transform(code, 'file.vue', [updateVTextFieldPropsFormat]).code).toMatchInlineSnapshot(`
+    "
+      <template>
+        <div>
+        <TextField density="compact">
+        </TextField>
+        </div>
+      </template>
+      <script>
+    import { Test, TextField } from '@lenders-cooperative/los-app-ui-component-lib';
+    </script>
+      "
+  `);
+});
+it('should not change if TextField already exists', () => {
+  const code = `
+  <template>
+        <div>
+        <TextField density="compact">
+        </TextField>
+        </div>
+      </template>
+  <script>
+      import { Test, TextField } from '@lenders-cooperative/los-app-ui-component-lib';
+      </script>
+  `;
+  expect(transform(code, 'file.vue', [updateVTextFieldPropsFormat]).code).toMatchInlineSnapshot(`
+    "
+      <template>
+            <div>
+            <TextField density="compact">
+            </TextField>
+            </div>
+          </template>
+      <script>
+    import { Test, TextField } from '@lenders-cooperative/los-app-ui-component-lib';
+    </script>
       "
   `);
 });
