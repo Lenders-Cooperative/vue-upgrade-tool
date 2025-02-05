@@ -4,6 +4,7 @@ import { changeVListItemGroupToVListGroup } from './v-list-item';
 import { updateVTextFieldPropsFormat } from './v-text-field';
 import { changeVBtnTextToVariant } from './v-btn-text';
 import { updateVMenuSlot } from './v-menu';
+import { updateVCheckboxToCheckbox } from './v-checkbox';
 
 export const vuetify = (): Plugin[] => [
   changeVTabItemToVWindowItem,
@@ -11,4 +12,5 @@ export const vuetify = (): Plugin[] => [
   updateVTextFieldPropsFormat,
   changeVBtnTextToVariant,
   updateVMenuSlot,
+  updateVCheckboxToCheckbox,
 ];
