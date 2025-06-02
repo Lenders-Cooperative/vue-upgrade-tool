@@ -5,6 +5,8 @@ import { updateVTextFieldPropsFormat } from './v-text-field';
 import { changeVBtnTextToVariant } from './v-btn-text';
 import { updateVMenuSlot } from './v-menu';
 import { updateVCheckboxToCheckbox } from './v-checkbox';
+import { changeVExpansionProperties } from './v-expansion';
+import { changeVStepperProperties } from './v-stepper';
 
 export const vuetify = (): Plugin[] => [
   changeVTabItemToVWindowItem,
@@ -13,4 +15,6 @@ export const vuetify = (): Plugin[] => [
   changeVBtnTextToVariant,
   updateVMenuSlot,
   updateVCheckboxToCheckbox,
+  changeVExpansionProperties,
+  changeVStepperProperties,
 ];

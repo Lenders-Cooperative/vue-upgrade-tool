@@ -2,7 +2,7 @@ import { CodemodPlugin, AST, builders } from 'vue-metamorph';
 
 export const updateVMenuSlot: CodemodPlugin = {
   type: 'codemod',
-  name: 'update v-menu, navigationmenuitem , multicategorymenu attrs, on to use props',
+  name: 'update v-menu, navigationmenuitem , multicategorymenu and v-tooltip attrs, on to use props',
 
   transform({ scriptASTs, sfcAST, utils: { traverseScriptAST, traverseTemplateAST } }) {
     let transformCount = 0;
@@ -25,7 +25,7 @@ export const updateVMenuSlot: CodemodPlugin = {
       while (current) {
         // Check if the current node is a VElement and has the name 'v-menu'
         if (current.type === 'VElement') {
-          if (['v-menu', 'navigationmenuitem', 'multicategorymenu'].includes(current.name)) return true;
+          if (['v-menu', 'navigationmenuitem', 'multicategorymenu', 'v-tooltip'].includes(current.name)) return true;
         }
         current = current.parent;
       }
