@@ -1,5 +1,4 @@
 import type { CodemodPlugin } from 'vue-metamorph';
-
 export const changeVStepperProperties: CodemodPlugin = {
   type: 'codemod',
   name: 'change v-stepper properties',
@@ -27,7 +26,16 @@ export const changeVStepperProperties: CodemodPlugin = {
               const attr = attrs[i];
 
               if (attr && attr.type === 'VAttribute' && attr.key.name === 'step' && attr.value) {
-                const rawValue = attr.value.value;
+                let rawValue: string = '';
+                if (attr.value.type === 'VLiteral') {
+                  rawValue = attr.value.value;
+                } else if (
+                  attr.value.type === 'VExpressionContainer' &&
+                  attr.value.expression &&
+                  attr.value.expression.type === 'Identifier'
+                ) {
+                  rawValue = attr.value.expression.name;
+                }
                 const num = Number(rawValue);
                 let expression;
                 // check to try to get correct value without quoting
@@ -64,18 +72,23 @@ export const changeVStepperProperties: CodemodPlugin = {
                     expression,
                   },
                 };
-                attrs[i] = { ...attrs[i], ...directiveNode };
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                attrs[i] = { ...attrs[i], ...directiveNode } as any;
+                transformCount++;
               }
             }
           } else if (node.type === 'VElement' && node.name === 'v-stepper-items') {
             node.rawName = 'v-stepper-window';
             node.name = 'v-stepper-window';
+            transformCount++;
           } else if (node.type === 'VElement' && node.name === 'v-stepper-content') {
             node.rawName = 'v-stepper-window-item';
             node.name = 'v-stepper-window-item';
+            transformCount++;
           }
         },
       });
     }
+    return transformCount;
   },
 };
