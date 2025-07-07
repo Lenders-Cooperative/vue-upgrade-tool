@@ -38,7 +38,7 @@ export const updateVCheckboxToCheckbox: CodemodPlugin = {
           // Look for the import declaration
           if (
             node.value.type === 'ImportDeclaration' &&
-            node.value.source.value === '@lenders-cooperative/los-app-ui-component-lib' &&
+            node.value.source.value === '@sba-ulp/ulp-npm-ui-component-lib' &&
             hasVCheckBox
           ) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

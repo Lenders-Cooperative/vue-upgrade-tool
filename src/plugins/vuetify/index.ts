@@ -7,6 +7,7 @@ import { updateVMenuSlot } from './v-menu';
 import { updateVCheckboxToCheckbox } from './v-checkbox';
 import { changeVExpansionProperties } from './v-expansion';
 import { changeVStepperProperties } from './v-stepper';
+import { changeMDIIconText } from './m-icon';
 
 export const vuetify = (): Plugin[] => [
   changeVTabItemToVWindowItem,
@@ -17,4 +18,5 @@ export const vuetify = (): Plugin[] => [
   updateVCheckboxToCheckbox,
   changeVExpansionProperties,
   changeVStepperProperties,
+  changeMDIIconText,
 ];

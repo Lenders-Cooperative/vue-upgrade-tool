@@ -63,7 +63,7 @@ export const updateVTextFieldPropsFormat: CodemodPlugin = {
           // Look for the import declaration
           if (
             node.value.type === 'ImportDeclaration' &&
-            node.value.source.value === '@lenders-cooperative/los-app-ui-component-lib' &&
+            node.value.source.value === '@sba-ulp/ulp-npm-ui-component-lib' &&
             hasVTextField
           ) {
             // Check if TextArea is already in the import

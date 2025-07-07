@@ -25,7 +25,7 @@ export const convertElementWithVForToTemplate: CodemodPlugin = {
           // Check if it's an element with a start tag and attributes
           if (node.type === 'VElement' && node.startTag) {
             const { startTag } = node;
-
+            const elementsToIgnore = [] as string[];
             // find v-for directive
             const vForDirective = startTag.attributes.find(
               (attr) => attr.type === 'VAttribute' && attr.key.type === 'VDirectiveKey' && attr.key.name.name === 'for', // Check for `v-for`
@@ -42,7 +42,7 @@ export const convertElementWithVForToTemplate: CodemodPlugin = {
             );
 
             // If we find a v-for directive, transform this element
-            if (vForDirective) {
+            if (vForDirective && startTag.type === 'VStartTag' && !elementsToIgnore.includes(startTag.parent.name)) {
               // Create a new <template> element
               const templateNode = {
                 type: 'VElement',
